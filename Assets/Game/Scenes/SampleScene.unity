@@ -466,5 +466,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridSize: {x: 5, y: 6}
+  _preserveAspectRatio: 0
   _gridData: {fileID: 11400000, guid: 17e4144633c2a2145a3ed662d4f4be52, type: 2}
+  _cardData: {fileID: 11400000, guid: 7f86711e39af69c49889d3dcdbbff8ef, type: 2}
   _showGizmos: 1

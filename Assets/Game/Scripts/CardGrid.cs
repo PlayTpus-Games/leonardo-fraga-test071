@@ -7,12 +7,10 @@ public class CardGrid : MonoBehaviour
     private int rows => _gridSize.y;
     private int columns => _gridSize.x;
     
-    // [SerializeField] private Vector2 _padding;
-    // [SerializeField] private Vector2 _spacing;
-    // [SerializeField] private Vector2 _cardMaxSize = Vector2.one * 2f;
-    // [SerializeField] private Vector2 _cardMinSize = Vector2.one * 0.1f;
-    // [SerializeField] private float _cardThickness = 0.1f;
-    [SerializeField] private GridConfigData _gridData;
+    [Tooltip("This was intended to be used with OdinInspector's InLineEditor attribute for a fluid workflow")]
+    [SerializeField/*, InLineEditor*/] private GridConfigData _gridData;
+    [Tooltip("This was intended to be used with OdinInspector's InLineEditor attribute for a fluid workflow")]
+    [SerializeField/*, InLineEditor*/] private CardSizeConfigData _cardData;
     [SerializeField] private bool _showGizmos = true;
 
     private Vector3[,] _gridPositions;
@@ -32,7 +30,7 @@ public class CardGrid : MonoBehaviour
     private void Awake() => Init();
     private bool Init()
     {
-        if (_gridData is null)
+        if (_gridData is null || _cardData is null)
             return false;
         
         CalculateGridWorldSize();
@@ -54,9 +52,9 @@ public class CardGrid : MonoBehaviour
     private void CalculateCardSize()
     {
         Vector2 totalSpacing = new Vector2(_gridData.Spacing.x * (columns - 1), _gridData.Spacing.y * (rows - 1));
-        _cardSize = new Vector3((_gridWorldSize.x - totalSpacing.x) / columns, _gridData.CardThickness, (_gridWorldSize.z - totalSpacing.y) / rows);
-        _cardSize.x = Mathf.Clamp(_cardSize.x, _gridData.CardMinSize.x, _gridData.CardMaxSize.x);
-        _cardSize.z = Mathf.Clamp(_cardSize.z, _gridData.CardMinSize.y, _gridData.CardMaxSize.y);
+        _cardSize = new Vector3((_gridWorldSize.x - totalSpacing.x) / columns, _cardData.Thickness, (_gridWorldSize.z - totalSpacing.y) / rows);
+        _cardSize.x = Mathf.Clamp(_cardSize.x, _cardData.MinSize.x, _cardData.MaxSize.x);
+        _cardSize.z = Mathf.Clamp(_cardSize.z, _cardData.MinSize.y, _cardData.MaxSize.y);
     }
 
     private void CalculateInitialCardPosition()
@@ -64,7 +62,7 @@ public class CardGrid : MonoBehaviour
         _initialCardPos = _center;
         _initialCardPos.x -= (columns - 1) * (_cardSize.x * 0.5f) + (columns - 1) * (_gridData.Spacing.x * 0.5f);
         _initialCardPos.z += (rows - 1) * (_cardSize.z * 0.5f) + (rows - 1) * (_gridData.Spacing.y * 0.5f);
-        _initialCardPos.y += _gridData.CardThickness * 0.5f;
+        _initialCardPos.y += _cardData.Thickness * 0.5f;
     }
     
     private void CreatePositionGrid()

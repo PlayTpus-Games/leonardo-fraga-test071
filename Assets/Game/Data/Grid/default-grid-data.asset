@@ -14,6 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _padding: {x: 2, y: 2}
   _spacing: {x: 0.3, y: 0.3}
-  _cardMaxSize: {x: 3, y: 4}
-  _cardMinSize: {x: 0.1, y: 0.1}
-  _cardThickness: 0.1
+  _cardSizeData: {fileID: 11400000, guid: 7f86711e39af69c49889d3dcdbbff8ef, type: 2}
