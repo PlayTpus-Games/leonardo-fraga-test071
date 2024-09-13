@@ -7,11 +7,12 @@ public class CardGrid : MonoBehaviour
     private int rows => _gridSize.y;
     private int columns => _gridSize.x;
     
-    [SerializeField] private Vector2 _padding;
-    [SerializeField] private Vector2 _spacing;
-    [SerializeField] private Vector2 _cardMaxSize = Vector2.one * 2f;
-    [SerializeField] private Vector2 _cardMinSize = Vector2.one * 0.1f;
-    [SerializeField] private float _cardThickness = 0.1f;
+    // [SerializeField] private Vector2 _padding;
+    // [SerializeField] private Vector2 _spacing;
+    // [SerializeField] private Vector2 _cardMaxSize = Vector2.one * 2f;
+    // [SerializeField] private Vector2 _cardMinSize = Vector2.one * 0.1f;
+    // [SerializeField] private float _cardThickness = 0.1f;
+    [SerializeField] private GridConfigData _gridData;
     [SerializeField] private bool _showGizmos = true;
 
     private Vector3[,] _gridPositions;
@@ -26,19 +27,19 @@ public class CardGrid : MonoBehaviour
     private void OnValidate()
     {
         _gridSize = new Vector2Int(Mathf.Clamp(_gridSize.x, 2, 10), Mathf.Clamp(_gridSize.y, 2, 10));
-        _cardMaxSize = new Vector2(Mathf.Clamp(_cardMaxSize.x, 0.1f, 20), Mathf.Clamp(_cardMaxSize.y, 0.1f, 20));
-        _cardMinSize = new Vector2(Mathf.Clamp(_cardMinSize.x, 0.1f, 9), Mathf.Clamp(_cardMinSize.y, 0.1f, 9));
-        _spacing = new Vector2(Mathf.Clamp(_spacing.x, 0, 10), Mathf.Clamp(_spacing.y, 0, 10)); 
-        _cardThickness = Mathf.Clamp(_cardThickness, 0.1f, 2f);
     }
 #endif
     private void Awake() => Init();
-    private void Init()
+    private bool Init()
     {
+        if (_gridData is null)
+            return false;
+        
         CalculateGridWorldSize();
         CalculateCardSize();
         CalculateInitialCardPosition();
         CreatePositionGrid();
+        return true;
     }
 
     private void CalculateGridWorldSize()
@@ -47,23 +48,23 @@ public class CardGrid : MonoBehaviour
         _bounds = _col.bounds;
         _center = _bounds.center;
         _center.y += _bounds.extents.y;
-        _gridWorldSize = _bounds.size - new Vector3(_padding.x, 0, _padding.y) * 0.5f;
+        _gridWorldSize = _bounds.size - new Vector3(_gridData.Padding.x, 0, _gridData.Padding.y) * 0.5f;
     }
 
     private void CalculateCardSize()
     {
-        Vector2 totalSpacing = new Vector2(_spacing.x * (columns - 1), _spacing.y * (rows - 1));
-        _cardSize = new Vector3((_gridWorldSize.x - totalSpacing.x) / columns, _cardThickness, (_gridWorldSize.z - totalSpacing.y) / rows);
-        _cardSize.x = Mathf.Clamp(_cardSize.x, _cardMinSize.x, _cardMaxSize.x);
-        _cardSize.z = Mathf.Clamp(_cardSize.z, _cardMinSize.y, _cardMaxSize.y);
+        Vector2 totalSpacing = new Vector2(_gridData.Spacing.x * (columns - 1), _gridData.Spacing.y * (rows - 1));
+        _cardSize = new Vector3((_gridWorldSize.x - totalSpacing.x) / columns, _gridData.CardThickness, (_gridWorldSize.z - totalSpacing.y) / rows);
+        _cardSize.x = Mathf.Clamp(_cardSize.x, _gridData.CardMinSize.x, _gridData.CardMaxSize.x);
+        _cardSize.z = Mathf.Clamp(_cardSize.z, _gridData.CardMinSize.y, _gridData.CardMaxSize.y);
     }
 
     private void CalculateInitialCardPosition()
     {
         _initialCardPos = _center;
-        _initialCardPos.x -= (columns - 1) * (_cardSize.x * 0.5f) + (columns - 1) * (_spacing.x * 0.5f);
-        _initialCardPos.z += (rows - 1) * (_cardSize.z * 0.5f) + (rows - 1) * (_spacing.y * 0.5f);
-        _initialCardPos.y += _cardThickness * 0.5f;
+        _initialCardPos.x -= (columns - 1) * (_cardSize.x * 0.5f) + (columns - 1) * (_gridData.Spacing.x * 0.5f);
+        _initialCardPos.z += (rows - 1) * (_cardSize.z * 0.5f) + (rows - 1) * (_gridData.Spacing.y * 0.5f);
+        _initialCardPos.y += _gridData.CardThickness * 0.5f;
     }
     
     private void CreatePositionGrid()
@@ -74,8 +75,8 @@ public class CardGrid : MonoBehaviour
             for (int column = 0; column < columns; column++)
             {
                 Vector3 pos = _initialCardPos;
-                pos.x += _cardSize.x * column + _spacing.x * column;
-                pos.z -= _cardSize.z * row + _spacing.y * row;
+                pos.x += _cardSize.x * column + _gridData.Spacing.x * column;
+                pos.z -= _cardSize.z * row + _gridData.Spacing.y * row;
                 _gridPositions[row, column] = pos;
             }    
         }
@@ -84,10 +85,8 @@ public class CardGrid : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (!_showGizmos)
+        if (!_showGizmos || !Init())
             return;
-        
-        Init();
         
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(_center, new Vector3(_gridWorldSize.x, 0f, _gridWorldSize.z));
@@ -108,26 +107,25 @@ public class CardGrid : MonoBehaviour
 
     private void GizmosPaddingLines()
     {
-        if (_padding == Vector2.zero)
+        if (_gridData.Padding == Vector2.zero)
             return;
         
         Vector3 botLeft = _bounds.min;
         botLeft.y = _center.y;
-        Vector3 botLeftPadded = botLeft + new Vector3(_padding.x, 0f, _padding.y) * 0.25f;
+        Vector3 botLeftPadded = botLeft + new Vector3(_gridData.Padding.x, 0f, _gridData.Padding.y) * 0.25f;
         Gizmos.DrawLine(botLeft, botLeftPadded);
         
         Vector3 topLeft = new Vector3(_bounds.min.x, _center.y, _bounds.max.z);
-        Vector3 topLeftPadded = topLeft + new Vector3(_padding.x, 0f, -_padding.y) * 0.25f;
+        Vector3 topLeftPadded = topLeft + new Vector3(_gridData.Padding.x, 0f, -_gridData.Padding.y) * 0.25f;
         Gizmos.DrawLine(topLeft, topLeftPadded);
         
         Vector3 topRight = _bounds.max;
-        Vector3 topRightPadded = topRight + new Vector3(-_padding.x, 0f, -_padding.y) * 0.25f;
+        Vector3 topRightPadded = topRight + new Vector3(-_gridData.Padding.x, 0f, -_gridData.Padding.y) * 0.25f;
         Gizmos.DrawLine(topRight, topRightPadded);
         
         Vector3 botRight = new Vector3(_bounds.max.x, _center.y, _bounds.min.z);
-        Vector3 botRightPadded = botRight + new Vector3(-_padding.x, 0f, _padding.y) * 0.25f;
+        Vector3 botRightPadded = botRight + new Vector3(-_gridData.Padding.x, 0f, _gridData.Padding.y) * 0.25f;
         Gizmos.DrawLine(botRight, botRightPadded);
-
     }
 #endif
 }
