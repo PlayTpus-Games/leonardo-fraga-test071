@@ -6,7 +6,8 @@ public class CardGrid : MonoBehaviour
     [SerializeField] private Vector2Int _gridSize;
     private int rows => _gridSize.y;
     private int columns => _gridSize.x;
-    
+
+    [SerializeField] private bool _preserveAspectRatio;
     [Tooltip("This was intended to be used with OdinInspector's InLineEditor attribute for a fluid workflow")]
     [SerializeField/*, InLineEditor*/] private GridConfigData _gridData;
     [Tooltip("This was intended to be used with OdinInspector's InLineEditor attribute for a fluid workflow")]
@@ -55,6 +56,14 @@ public class CardGrid : MonoBehaviour
         _cardSize = new Vector3((_gridWorldSize.x - totalSpacing.x) / columns, _cardData.Thickness, (_gridWorldSize.z - totalSpacing.y) / rows);
         _cardSize.x = Mathf.Clamp(_cardSize.x, _cardData.MinSize.x, _cardData.MaxSize.x);
         _cardSize.z = Mathf.Clamp(_cardSize.z, _cardData.MinSize.y, _cardData.MaxSize.y);
+
+        if (_preserveAspectRatio)
+        {
+            if (_cardSize.z * _cardData.AspectRatio > _cardSize.x)
+                _cardSize.z = _cardSize.x / _cardData.AspectRatio;
+            else if (_cardSize.y * _cardData.AspectRatio < _cardSize.x)
+                _cardSize.x = _cardSize.z * _cardData.AspectRatio;
+        }
     }
 
     private void CalculateInitialCardPosition()
