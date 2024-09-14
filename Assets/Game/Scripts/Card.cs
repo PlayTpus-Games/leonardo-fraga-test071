@@ -6,6 +6,7 @@ public class Card : MonoBehaviour
 {
     [SerializeField] private BoxCollider _col;
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private ParticleSystem _psMatch;
     [Tooltip("Index used for matching cards. Do NOT alter this value")]
     [SerializeField] private int _index;
     public int Index => _index;
@@ -34,6 +35,14 @@ public class Card : MonoBehaviour
 
         if (hiding)
             _revealed = false;
+    }
+
+    public void PlayMatchEffects()
+    {
+        _psMatch.transform.SetParent(null);
+        _psMatch.transform.localScale = Vector3.one;
+        _psMatch.Play();
+        Destroy(_psMatch.gameObject, 1f);
     }
     
     private void Update()

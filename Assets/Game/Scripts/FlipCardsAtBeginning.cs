@@ -24,6 +24,8 @@ public class FlipCardsAtBeginning : MonoBehaviour
         foreach (Card card in cards)
         {
             _cardFlipper.FlipCard(card, CardFlipper.FlipType.GameStart);
+            SoundManager.instance.Play_CardFlip(0.5f, true);
+            
             if (_intervalBetweenCards > 0f)
                 yield return new WaitForSeconds(_intervalBetweenCards);
         }

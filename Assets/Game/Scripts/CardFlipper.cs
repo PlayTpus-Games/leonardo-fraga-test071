@@ -20,6 +20,7 @@ public class CardFlipper : MonoBehaviour
         Coroutine coroutine = StartCoroutine(FlipCardCoroutine(card, flipType));
         bool hiding = Math.Abs(card.transform.eulerAngles.z) < 0.1f;
         card.SetIsFlipping(coroutine, hiding);
+        SoundManager.instance.Play_CardFlip();
     }
     private IEnumerator FlipCardCoroutine(Card card, FlipType flipType)
     {

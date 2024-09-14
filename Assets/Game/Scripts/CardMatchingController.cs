@@ -26,8 +26,6 @@ public class CardMatchingController : MonoBehaviour
         _cardsLeft = new HashSet<int>(_cardSpawner.Cards.Count / 2);
         foreach (Card card in _cardSpawner.Cards)
             _cardsLeft.Add(card.Index);
-        
-        Debug.Log($"<size=22><color=white>Cards Left: {_cardsLeft.Count}</color></size>");
     }
 
     void Update()
@@ -49,14 +47,16 @@ public class CardMatchingController : MonoBehaviour
                     _cardsLeft.Remove(card.Index);
                     StartCoroutine(RemoveCardsFromBoard(_selectedCard, card));
                     _selectedCard = null;
+                    SoundManager.instance.Play_Match();
                     
                     if (_cardsLeft.Count == 0)
-                        Victory();
+                        StartCoroutine(Victory(card));
                 }
                 else
                 {
                     StartCoroutine(UnflipCards(_selectedCard, card));
                     _selectedCard = null;
+                    SoundManager.instance.Play_Mismatch();
                 }
             }
         }
@@ -73,12 +73,18 @@ public class CardMatchingController : MonoBehaviour
     private IEnumerator RemoveCardsFromBoard(Card prevCard, Card currentCard)
     {
         yield return new WaitWhile(() => currentCard.IsFlipping);
+        
+        prevCard.PlayMatchEffects();
+        currentCard.PlayMatchEffects();
+        
         Destroy(prevCard.gameObject, 0.5f);
         Destroy(currentCard.gameObject, 0.5f);
     }
     
-    private void Victory()
+    private IEnumerator Victory(Card currentCard)
     {
-        Debug.Log($"<size=22><color=aqua>VICTORY!</color></size>");
+        yield return new WaitWhile(() => currentCard.IsFlipping);
+        yield return new WaitForSeconds(_unflipDelay);
+        SoundManager.instance.Play_Win(1f, false);
     }
 }
