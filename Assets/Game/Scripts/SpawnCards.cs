@@ -8,8 +8,9 @@ public class SpawnCards : MonoBehaviour
     [SerializeField] private CardGrid _grid;
     [SerializeField] private CardImageData _imagesData;
     [SerializeField] private GameObject _cardPrefab;
-    private List<Card> _cards;
-
+    [SerializeField] private List<Card> _cards;
+    public List<Card> Cards => _cards;
+    
     public void Spawn()
     {
         DeleteAll();
@@ -21,7 +22,6 @@ public class SpawnCards : MonoBehaviour
         {
             Transform cardClone = ((GameObject)PrefabUtility.InstantiatePrefab(_cardPrefab)).transform;
             cardClone.localScale = _grid.CardSize;
-            cardClone.SetParent(transform);
             cardClone.position = pos;
             
             Card card = cardClone.GetComponent<Card>();
@@ -52,8 +52,11 @@ public class SpawnCards : MonoBehaviour
     
     public void DeleteAll()
     {
-        while (transform.childCount > 0)
-            DestroyImmediate(transform.GetChild(0).gameObject);
+        while (_cards.Count > 0)
+        {
+            DestroyImmediate(_cards[0].gameObject);
+            _cards.RemoveAt(0);
+        }
 
         _cards = new List<Card>(_grid.TotalSize);
     }

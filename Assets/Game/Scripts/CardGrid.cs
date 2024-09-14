@@ -44,7 +44,7 @@ public class CardGrid : MonoBehaviour
 #endif
     private void Update()
     {
-        if (_gridData is null || _cardData is null)
+        if (Application.isPlaying || _gridData is null || _cardData is null)
             return;
         
         CalculateCardSize();
