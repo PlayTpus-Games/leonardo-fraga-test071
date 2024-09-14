@@ -7,14 +7,14 @@ public class FlipCardsAtBeginning : MonoBehaviour
     [SerializeField] private float _intervalBetweenCards;
 
     private CardFlipper _cardFlipper;
-    private SpawnCards _spawnCards;
+    private CardSpawner _cardSpawner;
     private Card[] cards;
 
     private void Awake()
     {
         _cardFlipper = GetComponent<CardFlipper>();
-        _spawnCards = GetComponent<SpawnCards>();
-        cards = _spawnCards.Cards.ToArray();
+        _cardSpawner = GetComponent<CardSpawner>();
+        cards = _cardSpawner.Cards.ToArray();
     }
 
     private void Start() => StartCoroutine(FlipCards());

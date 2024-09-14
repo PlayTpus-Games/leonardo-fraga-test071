@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(CardGrid))]
-public class SpawnCards : MonoBehaviour
+public class CardSpawner : MonoBehaviour
 {
     [SerializeField] private CardGrid _grid;
     [SerializeField] private CardImageData _imagesData;

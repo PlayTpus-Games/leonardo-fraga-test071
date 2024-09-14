@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider)), ExecuteInEditMode]
@@ -7,13 +6,15 @@ public class Card : MonoBehaviour
 {
     [SerializeField] private BoxCollider _col;
     [SerializeField] private SpriteRenderer _spriteRenderer;
-
-    private int _index;
+    [Tooltip("Index used for matching cards. Do NOT alter this value")]
+    [SerializeField] private int _index;
     public int Index => _index;
 
     private Quaternion prevRotation;
     private bool _flipping;
     public bool IsFlipping => _flipping;
+    private bool _revealed;
+    public bool IsRevealed => _revealed;
     
     public void SetCard((Sprite sprite, int index) spriteIndex)
     {
@@ -21,12 +22,18 @@ public class Card : MonoBehaviour
         _index = spriteIndex.index;
     }
 
-    public void SetIsFlipping(Coroutine flipCoroutine) => StartCoroutine(SetIsFlippingCoroutine(flipCoroutine));
-    private IEnumerator SetIsFlippingCoroutine(Coroutine flipCoroutine)
+    public void SetIsFlipping(Coroutine flipCoroutine, bool hiding) => StartCoroutine(SetIsFlippingCoroutine(flipCoroutine, hiding));
+    private IEnumerator SetIsFlippingCoroutine(Coroutine flipCoroutine, bool hiding)
     {
+        if (!hiding)
+            _revealed = true;
+        
         _flipping = true;
         yield return flipCoroutine;
         _flipping = false;
+
+        if (hiding)
+            _revealed = false;
     }
     
     private void Update()

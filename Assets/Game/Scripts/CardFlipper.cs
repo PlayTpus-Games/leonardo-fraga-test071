@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CardFlipper : MonoBehaviour
 {
@@ -10,14 +12,14 @@ public class CardFlipper : MonoBehaviour
 
     private const float EULER_Z_LOOKING_DOWN = -180f;
 
-    public Coroutine FlipCard(Card card, FlipType flipType)
+    public void FlipCard(Card card, FlipType flipType)
     {
         if (card.IsFlipping)
-            return null;
+            return;
 
         Coroutine coroutine = StartCoroutine(FlipCardCoroutine(card, flipType));
-        card.SetIsFlipping(coroutine);
-        return coroutine;
+        bool hiding = Math.Abs(card.transform.eulerAngles.z) < 0.1f;
+        card.SetIsFlipping(coroutine, hiding);
     }
     private IEnumerator FlipCardCoroutine(Card card, FlipType flipType)
     {
