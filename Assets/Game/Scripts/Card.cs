@@ -1,38 +1,28 @@
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(BoxCollider)), ExecuteInEditMode]
 public class Card : MonoBehaviour
 {
-    private BoxCollider col;
-    private SpriteRenderer spriteRenderer;
-    private bool _autoScale;
+    [SerializeField] private BoxCollider _col;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+
+    private int _index;
+    public int Index => _index;
     
-    private void Awake()
+    public void SetCard((Sprite sprite, int index) spriteIndex)
     {
-        Init();
+        _spriteRenderer.sprite = spriteIndex.sprite;
+        _index = spriteIndex.index;
     }
-
-    private bool Init()
+    public void SetCard(Sprite sprite, int index)
     {
-        col ??= GetComponent<BoxCollider>();
-        spriteRenderer ??= GetComponentInChildren<SpriteRenderer>();
-        return true;
+        _spriteRenderer.sprite = sprite;
+        _index = index;
     }
-
-    private void ScaleSpriteToCard()
+    
+    private void Update()
     {
-        Bounds bounds = col.bounds;
-        spriteRenderer.transform.localScale = new Vector3(bounds.extents.x, bounds.extents.z, 0f) * 0.25f + Vector3.forward;
+        float yPos = _col.bounds.extents.y / (transform.localScale.y == 0 ? 0.001f : transform.localScale.y) + 0.01f;
+        _spriteRenderer.transform.localPosition = new Vector3(0f, yPos, 0f);
     }
-
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        if (!Init())
-            return;
-
-        float yPos = col.bounds.extents.y / (transform.localScale.y == 0 ? 0.001f : transform.localScale.y) + 0.01f;
-        spriteRenderer.transform.localPosition = new Vector3(0f, yPos, 0f);
-    }
-#endif
 }

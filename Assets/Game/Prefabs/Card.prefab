@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3329070402200874499}
   - component: {fileID: 3329070402200874498}
   - component: {fileID: 3329070402200874509}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Card
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,6 +111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: babfee51be00da840a43ab9c0b241eeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _col: {fileID: 3329070402200874498}
+  _spriteRenderer: {fileID: 3329070403137399858}
 --- !u!1 &3329070403137399868
 GameObject:
   m_ObjectHideFlags: 0
