@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(BoxCollider))]
 public class CardGrid : MonoBehaviour
@@ -34,6 +35,10 @@ public class CardGrid : MonoBehaviour
         _spawner = GetComponent<CardSpawner>();
     }
 
+    private void OnEnable() => SceneManager.sceneUnloaded += StopCoroutines;
+    private void OnDisable() => SceneManager.sceneUnloaded -= StopCoroutines;
+    private void StopCoroutines(Scene arg0) => StopAllCoroutines();
+    
     public void SetNewLevel(LevelData data)
     {
         _data = data;

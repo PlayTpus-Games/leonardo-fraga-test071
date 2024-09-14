@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CardSpawner), typeof(CardFlipper))]
 public class CardMatchingController : MonoBehaviour
@@ -47,14 +48,18 @@ public class CardMatchingController : MonoBehaviour
     {
         _flipBeginning.Subscribe_OnCardsUnflipped(BlockUpdate);
         _flipBeginning.Subscribe_OnAllCardsFlipper(UnblockUpdate);
+        SceneManager.sceneLoaded += GetCamera;
     }
 
     private void OnDisable()
     {
         _flipBeginning.Unsubscribe_OnCardsUnflipped(BlockUpdate);
         _flipBeginning.Unsubscribe_OnAllCardsFlipper(UnblockUpdate);
+        SceneManager.sceneLoaded -= GetCamera;
     }
-
+    
+    private void GetCamera(Scene arg0, LoadSceneMode a) => _camera = Camera.main;
+    
     private void BlockUpdate() => _canUpdate = false;
     private void UnblockUpdate() => _canUpdate = true;
     

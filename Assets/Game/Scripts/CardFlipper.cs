@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class CardFlipper : MonoBehaviour
@@ -11,6 +12,10 @@ public class CardFlipper : MonoBehaviour
     [SerializeField] private CardFlipData _cardSelected;
 
     private const float EULER_Z_LOOKING_DOWN = -180f;
+
+    private void OnEnable() => SceneManager.sceneUnloaded += StopCoroutines;
+    private void OnDisable() => SceneManager.sceneUnloaded -= StopCoroutines;
+    private void StopCoroutines(Scene arg0) => StopAllCoroutines();
 
     public void FlipCard(Card card, FlipType flipType)
     {
@@ -24,6 +29,8 @@ public class CardFlipper : MonoBehaviour
     }
     private IEnumerator FlipCardCoroutine(Card card, FlipType flipType)
     {
+        if (card == null)
+            Debug.Log("");
         Transform cardTransform = card.transform;
         CardFlipData data = flipType is FlipType.GameStart ? _gameStart : _cardSelected;
 
@@ -57,40 +64,4 @@ public class CardFlipper : MonoBehaviour
         cardTransform.rotation = finalRot;
         cardTransform.localScale = initialScale;
     }
-    
-    // private IEnumerator UpDown(Transform card, float targetY, float duration, AnimationCurve curve, float delay)
-    // {
-    //     yield return new WaitForSeconds(delay);
-    //     
-    //     Vector3 initialPos = card.position;
-    //     Vector3 finalPos = initialPos + new Vector3(0f, targetY, 0f);
-    //     
-    //     float elapsedTime = 0;
-    //     while (elapsedTime < duration)
-    //     {
-    //         card.position = Vector3.Lerp(initialPos, finalPos, curve.Evaluate(elapsedTime / duration));
-    //         elapsedTime += Time.deltaTime;
-    //         yield return null;
-    //     }
-    //
-    //     card.position = initialPos;
-    // }
-    //
-    // private IEnumerator RotateCard(Transform card, float duration, AnimationCurve curve, float delay)
-    // {
-    //     yield return new WaitForSeconds(delay);
-    //     
-    //     Quaternion initialRot = card.rotation;
-    //     Quaternion finalRot = Quaternion.Euler(0f, 0f, -180f);
-    //     
-    //     float elapsedTime = 0;
-    //     while (elapsedTime < duration)
-    //     {
-    //         card.rotation = Quaternion.Slerp(initialRot, finalRot, curve.Evaluate(elapsedTime / duration));
-    //         elapsedTime += Time.deltaTime;
-    //         yield return null;
-    //     }
-    //
-    //     card.rotation = finalRot;
-    // }
 }

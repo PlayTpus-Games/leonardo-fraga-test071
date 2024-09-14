@@ -10,8 +10,8 @@ public class SaveLoadController : MonoBehaviour
     private int lastSavedIndex;
     private int highscore;
 
-    public int Level => lastSavedIndex;
-    public int Highscore => highscore;
+    public int Level => _levelData.value;
+    public int Highscore => _highscoreData.value;
     
     private void Awake()
     {

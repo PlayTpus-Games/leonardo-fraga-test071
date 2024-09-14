@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FlipCardsAtBeginning : MonoBehaviour
 {
@@ -25,12 +26,16 @@ public class FlipCardsAtBeginning : MonoBehaviour
         _cardSpawner = GetComponent<CardSpawner>();
     }
 
+    private void OnEnable() => SceneManager.sceneUnloaded += StopCoroutines;
+    private void OnDisable() => SceneManager.sceneUnloaded -= StopCoroutines;
+    private void StopCoroutines(Scene arg0) => StopAllCoroutines();
+    
     public void FlipCards()
     {
         OnCardsUnflipped?.Invoke();
         cards = _cardSpawner.Cards.ToArray();
         StartCoroutine(FlipCardsCoroutine());
-        StartCoroutine(RaiseOnAllCaardsFlipped());
+        StartCoroutine(RaiseOnAllCardsFlipped());
     }
 
     private IEnumerator FlipCardsCoroutine()
@@ -46,7 +51,7 @@ public class FlipCardsAtBeginning : MonoBehaviour
         }
     }
 
-    private IEnumerator RaiseOnAllCaardsFlipped()
+    private IEnumerator RaiseOnAllCardsFlipped()
     {
         yield return new WaitForSeconds(_initialDelay + (cards.Length + 1) * _intervalBetweenCards + 0.5f);
         OnAllCardsFlipped?.Invoke();

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    private static LevelManager instance;
+    public static LevelManager instance;
     
     [SerializeField] private IntData _currentLevel;
     [SerializeField] private LevelData[] _levelSequence;
@@ -38,11 +38,24 @@ public class LevelManager : MonoBehaviour
         _currentLevel.SetValue(levelIndex);
         CardGrid.instance.SetNewLevel(_levelSequence[levelIndex]);
     }
+
+    public void RestartLevel()
+    {
+        levelIndex = SaveLoadController.instance.Level;
+        CardGrid.instance.SetNewLevel(_levelSequence[levelIndex]);
+        ScoreManager.instance.SetValues();
+    }
     
     private void Start()
     {
         levelIndex = SaveLoadController.instance.Level;
         _currentLevel.SetValue(levelIndex);
+        CardGrid.instance.SetNewLevel(_levelSequence[levelIndex]);
+    }
+
+    public void NewGame()
+    {
+        levelIndex = 0;
         CardGrid.instance.SetNewLevel(_levelSequence[levelIndex]);
     }
 }

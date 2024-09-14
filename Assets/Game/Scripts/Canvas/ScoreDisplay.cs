@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ScoreDisplay : MonoBehaviour
 {
@@ -41,6 +42,7 @@ public class ScoreDisplay : MonoBehaviour
         _comboData.Subscribe_OnValueChanged(UpdateCombo);   
         _highscoreData.Subscribe_OnValueChanged(UpdateHighscore);   
         _levelData.Subscribe_OnValueChanged(UpdateLevel);
+        SceneManager.sceneLoaded += UpdateValues;
     }
 
     private void OnDisable()
@@ -49,8 +51,22 @@ public class ScoreDisplay : MonoBehaviour
         _comboData.Unsubscribe_OnValueChanged(UpdateCombo);
         _highscoreData.Unsubscribe_OnValueChanged(UpdateHighscore);   
         _levelData.Unsubscribe_OnValueChanged(UpdateLevel);
+        SceneManager.sceneLoaded -= UpdateValues;
     }
 
+    private void UpdateValues(Scene a, LoadSceneMode b) => UpdateLevelAndHighscore();
+    
+    private void Start() => UpdateLevelAndHighscore();
+
+    private void UpdateLevelAndHighscore() => StartCoroutine(UpdateLevelAndHighscoreDelayed());
+
+    private IEnumerator UpdateLevelAndHighscoreDelayed()
+    {
+        yield return new WaitForSeconds(0.5f);
+        UpdateLevel(SaveLoadController.instance.Level);
+        UpdateHighscore(SaveLoadController.instance.Highscore);
+    }
+    
     private void UpdateCombo(int combo)
     {
         if (_coCombo != null)

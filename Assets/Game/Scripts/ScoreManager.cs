@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    private static ScoreManager instance;
+    public static ScoreManager instance;
     
     [SerializeField] private IntData _highScore;
     [SerializeField] private IntData _score;
@@ -37,7 +37,7 @@ public class ScoreManager : MonoBehaviour
     }
     
     private void Start() => SetValues();
-    private void SetValues()
+    public void SetValues()
     {
         _combo.SetValue(0);
         _score.SetValue(0);
