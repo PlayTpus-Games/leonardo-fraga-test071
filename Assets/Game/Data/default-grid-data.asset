@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1da312da96e1cdf45a619c51fc1a3987, type: 3}
   m_Name: default-grid-data
   m_EditorClassIdentifier: 
-  _padding: {x: 2, y: 2}
+  _padding: {x: 5.31, y: 4.06}
   _spacing: {x: 0.3, y: 0.3}
-  _cardSizeData: {fileID: 11400000, guid: 7f86711e39af69c49889d3dcdbbff8ef, type: 2}
