@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(CardSpawner), typeof(CardFlipper))]
 public class CardMatchingController : MonoBehaviour
 {
+    public static CardMatchingController instance;
+    
     [SerializeField] private LayerMask _cardLayerMask;
     [SerializeField] private float _unflipDelay;
 
@@ -14,8 +17,23 @@ public class CardMatchingController : MonoBehaviour
     private Card _selectedCard;
     private HashSet<int> _cardsLeft;
 
+    private Action OnMatch; 
+    private Action OnMismatch;
+    private Action OnVictory;
+    public void Subscribe_OnMatch(Action action) => OnMatch += action;
+    public void Unsubscribe_OnMatch(Action action) => OnMatch -= action;
+    public void Subscribe_OnMismatch(Action action) => OnMismatch += action;
+    public void Unsubscribe_OnMismatch(Action action) => OnMismatch -= action;
+    public void Subscribe_OnVictory(Action action) => OnVictory += action;
+    public void Unsubscribe_OnVictory(Action action) => OnVictory -= action;
+    
     private void Awake()
     {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+        
         _cardSpawner = GetComponent<CardSpawner>();
         _flipper = GetComponent<CardFlipper>();
         _camera = Camera.main;
@@ -31,37 +49,49 @@ public class CardMatchingController : MonoBehaviour
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
-        {
-            if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, 100f, _cardLayerMask))
-            {
-                Card card = hitInfo.transform.GetComponent<Card>();
-                if (card.IsRevealed || card.IsFlipping)
-                    return;
-
-                _flipper.FlipCard(card, CardFlipper.FlipType.CardSelected);
-
-                if (_selectedCard is null)
-                    _selectedCard = card;
-                else if (_selectedCard.Index == card.Index)
-                {
-                    _cardsLeft.Remove(card.Index);
-                    StartCoroutine(RemoveCardsFromBoard(_selectedCard, card));
-                    _selectedCard = null;
-                    SoundManager.instance.Play_Match();
-                    
-                    if (_cardsLeft.Count == 0)
-                        StartCoroutine(Victory(card));
-                }
-                else
-                {
-                    StartCoroutine(UnflipCards(_selectedCard, card));
-                    _selectedCard = null;
-                    SoundManager.instance.Play_Mismatch();
-                }
-            }
-        }
+            TrySelectCard();
     }
 
+    private void TrySelectCard()
+    {
+        if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, 100f, _cardLayerMask))
+        {
+            Card card = hitInfo.transform.GetComponent<Card>();
+            if (card.IsRevealed || card.IsFlipping)
+                return;
+
+            _flipper.FlipCard(card, CardFlipper.FlipType.CardSelected);
+
+            if (_selectedCard is null)
+                SelectFirstCard(card);
+            else if (_selectedCard.Index == card.Index)
+                Match(card);
+            else
+                Mismatch(card);
+        }
+    }
+    private void SelectFirstCard(Card card) => _selectedCard = card;
+    private void Match(Card card)
+    {
+        _cardsLeft.Remove(card.Index);
+        StartCoroutine(RemoveCardsFromBoard(_selectedCard, card));
+        _selectedCard = null;
+        SoundManager.instance.Play_Match();
+                    
+        if (_cardsLeft.Count == 0)
+            StartCoroutine(Victory(card));
+        
+        OnMatch?.Invoke();
+    }
+    private void Mismatch(Card card)
+    {
+        StartCoroutine(UnflipCards(_selectedCard, card));
+        _selectedCard = null;
+        SoundManager.instance.Play_Mismatch();
+
+        OnMismatch?.Invoke();
+    }
+    
     private IEnumerator UnflipCards(Card prevCard, Card currentCard)
     {
         yield return new WaitWhile(() => currentCard.IsFlipping);
@@ -86,5 +116,6 @@ public class CardMatchingController : MonoBehaviour
         yield return new WaitWhile(() => currentCard.IsFlipping);
         yield return new WaitForSeconds(_unflipDelay);
         SoundManager.instance.Play_Win(1f, false);
+        OnVictory?.Invoke();
     }
 }

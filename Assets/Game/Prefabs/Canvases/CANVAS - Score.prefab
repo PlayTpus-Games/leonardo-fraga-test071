@@ -567,7 +567,7 @@ GameObject:
   - component: {fileID: 130095194187436457}
   - component: {fileID: 130095194187436462}
   m_Layer: 5
-  m_Name: Value
+  m_Name: Value - Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -621,7 +621,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 123
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d7b224fc84085234892cf2e081d6005b, type: 2}
   m_sharedMaterial: {fileID: -1071470073496893247, guid: d7b224fc84085234892cf2e081d6005b,
@@ -703,6 +703,7 @@ GameObject:
   - component: {fileID: 130095194278100426}
   - component: {fileID: 130095194278100427}
   - component: {fileID: 130095194278100424}
+  - component: {fileID: 1781026489}
   m_Layer: 5
   m_Name: CANVAS - Score
   m_TagString: Untagged
@@ -793,6 +794,61 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1781026489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130095194278100425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c709fdcf1249a0b469e5c8905beb7768, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _highscoreData: {fileID: 11400000, guid: 074fe67c0a1757748b5eb1beeffe04b0, type: 2}
+  _scoreData: {fileID: 11400000, guid: 66d46a9d9eb1b474481892829d9b6c44, type: 2}
+  _comboData: {fileID: 11400000, guid: acab772ad7b429c439097b0de0571a67, type: 2}
+  _level: {fileID: 130095194310848533}
+  _highscore: {fileID: 130095194785703955}
+  _score: {fileID: 130095194187436462}
+  _combo: {fileID: 130095194568716642}
+  _duration: 0.15
+  _scaleMultiplier: 1.5
+  _curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.25
+      inSlope: 0.004897299
+      outSlope: 0.004897299
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: 0.008715991
+      outSlope: 0.008715991
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.38801873
+    - serializedVersion: 3
+      time: 1
+      value: 0.25
+      inSlope: 0.0039822552
+      outSlope: 0.0039822552
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _changeTextAt: 0.4
 --- !u!1 &130095194310848539
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,7 +861,7 @@ GameObject:
   - component: {fileID: 130095194310848532}
   - component: {fileID: 130095194310848533}
   m_Layer: 5
-  m_Name: Value
+  m_Name: Value - Level
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -941,7 +997,7 @@ GameObject:
   - component: {fileID: 130095194568716637}
   - component: {fileID: 130095194568716642}
   m_Layer: 5
-  m_Name: Value
+  m_Name: Value - Combo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -995,7 +1051,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 4x
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d7b224fc84085234892cf2e081d6005b, type: 2}
   m_sharedMaterial: {fileID: -1071470073496893247, guid: d7b224fc84085234892cf2e081d6005b,
@@ -1155,7 +1211,7 @@ GameObject:
   - component: {fileID: 130095194785703954}
   - component: {fileID: 130095194785703955}
   m_Layer: 5
-  m_Name: Value
+  m_Name: Value - High Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1209,7 +1265,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d7b224fc84085234892cf2e081d6005b, type: 2}
   m_sharedMaterial: {fileID: -1071470073496893247, guid: d7b224fc84085234892cf2e081d6005b,
