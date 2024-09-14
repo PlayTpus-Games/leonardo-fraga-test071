@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39c703ee524dc1e47952419859d91618, type: 3}
+  m_Name: Level_14
+  m_EditorClassIdentifier: 
+  _gridSize: {x: 10, y: 4}
+  _preserveAspectRatio: 1
+  _gridData: {fileID: 11400000, guid: 17e4144633c2a2145a3ed662d4f4be52, type: 2}
+  _cardData: {fileID: 11400000, guid: 7f86711e39af69c49889d3dcdbbff8ef, type: 2}
+  _imagesData: {fileID: 11400000, guid: 20cb37d472198694995007570924e8fb, type: 2}
