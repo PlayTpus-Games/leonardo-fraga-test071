@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca87c6e008e6d7f4db465fd48960d39d, type: 3}
+  m_Name: sfx-data-default
+  m_EditorClassIdentifier: 
+  _sfxFlipping: {fileID: 8300000, guid: 18da2a1a94c7eb44da439f5bfe2cdbe5, type: 3}
+  _sfxMatch: {fileID: 8300000, guid: 9463849b63dfbc5418431f6864b1e005, type: 3}
+  _sfxMismatch: {fileID: 8300000, guid: d7b91c6e3a67b524a845cf4d31b86bc5, type: 3}
+  _sfxWin: {fileID: 8300000, guid: 05d5c7e73cf75fa42b70e75aa8cb9e86, type: 3}
+  _sfxLose: {fileID: 8300000, guid: 984b4d8d14c338e4193b649498f82b11, type: 3}
