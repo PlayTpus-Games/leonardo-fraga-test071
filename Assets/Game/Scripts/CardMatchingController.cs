@@ -32,7 +32,7 @@ public class CardMatchingController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, 30f, _cardLayerMask))
+            if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, 100f, _cardLayerMask))
             {
                 Card card = hitInfo.transform.GetComponent<Card>();
                 if (card.IsRevealed || card.IsFlipping)
