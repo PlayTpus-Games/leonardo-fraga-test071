@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour
 {
+    private static ScoreManager instance;
+    
     [SerializeField] private IntData _highScore;
     [SerializeField] private IntData _score;
     [SerializeField] private IntData _combo;
@@ -11,36 +12,36 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private int _pointsPerMatch;
     [Tooltip("If the multiplier is 0.2 and the combo is at 2, the score will be multiplied by 1.2. If combo is 3, by 1.4")]
     [SerializeField] private float _multiplierIncreasePerCombo;
-    
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+        
+        DontDestroyOnLoad(gameObject);
+    }
+
     private void OnEnable()
     {
-        SceneManager.sceneLoaded += NewLevelLoaded;
-        SceneManager.sceneUnloaded += LevelUnloaded;
-    }
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= NewLevelLoaded;
-        SceneManager.sceneUnloaded -= LevelUnloaded;
-    }
-
-    private void Start() => StartCoroutine(DelayedStart());
-
-    private void NewLevelLoaded(Scene scene, LoadSceneMode loadMode) => StartCoroutine(DelayedStart());
-    private IEnumerator DelayedStart()
-    {
-        yield return null;
         CardMatchingController.instance.Subscribe_OnMatch(Match);
         CardMatchingController.instance.Subscribe_OnMismatch(Mismatch);
         CardMatchingController.instance.Subscribe_OnVictory(Victory);
-
-        _combo.SetValue(0);
-        _score.SetValue(0);
     }
-    private void LevelUnloaded(Scene scene)
+    private void OnDisable()
     {
         CardMatchingController.instance.Unsubscribe_OnMatch(Match);
         CardMatchingController.instance.Unsubscribe_OnMismatch(Mismatch);
         CardMatchingController.instance.Unsubscribe_OnVictory(Victory);
+    }
+    
+    private void Start() => SetValues();
+    private void SetValues()
+    {
+        _combo.SetValue(0);
+        _score.SetValue(0);
+        _highScore.SetValue(SaveLoadController.instance.Highscore);
     }
     private void Match()
     {
@@ -54,9 +55,10 @@ public class ScoreManager : MonoBehaviour
         }
     }
     private void Mismatch() => _combo.SetValue(0);
-
     private void Victory()
     {
         _highScore.AddValue(_score.value);
+        _combo.SetValue(0);
+        _score.SetValue(0);
     }
 }

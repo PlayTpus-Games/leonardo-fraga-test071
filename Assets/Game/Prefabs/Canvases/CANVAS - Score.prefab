@@ -809,6 +809,7 @@ MonoBehaviour:
   _highscoreData: {fileID: 11400000, guid: 074fe67c0a1757748b5eb1beeffe04b0, type: 2}
   _scoreData: {fileID: 11400000, guid: 66d46a9d9eb1b474481892829d9b6c44, type: 2}
   _comboData: {fileID: 11400000, guid: acab772ad7b429c439097b0de0571a67, type: 2}
+  _levelData: {fileID: 11400000, guid: f7f9a5a8fea88d34a8bdf119b95240fd, type: 2}
   _level: {fileID: 130095194310848533}
   _highscore: {fileID: 130095194785703955}
   _score: {fileID: 130095194187436462}

@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class ScoreDisplay : MonoBehaviour
 {
+    private static ScoreDisplay instance;
+    
     [SerializeField] private IntData _highscoreData;
     [SerializeField] private IntData _scoreData;
     [SerializeField] private IntData _comboData;
+    [SerializeField] private IntData _levelData;
     [Space(15)]
     [SerializeField] private TextMeshProUGUI _level;
     [SerializeField] private TextMeshProUGUI _highscore;
@@ -21,12 +24,23 @@ public class ScoreDisplay : MonoBehaviour
 
     private Coroutine _coCombo;
     private Coroutine _coScore;
-    
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+        
+        DontDestroyOnLoad(gameObject);
+    }
+
     private void OnEnable()
     {
         _scoreData.Subscribe_OnValueChanged(UpdateScore);
         _comboData.Subscribe_OnValueChanged(UpdateCombo);   
         _highscoreData.Subscribe_OnValueChanged(UpdateHighscore);   
+        _levelData.Subscribe_OnValueChanged(UpdateLevel);
     }
 
     private void OnDisable()
@@ -34,6 +48,7 @@ public class ScoreDisplay : MonoBehaviour
         _scoreData.Unsubscribe_OnValueChanged(UpdateScore);
         _comboData.Unsubscribe_OnValueChanged(UpdateCombo);
         _highscoreData.Unsubscribe_OnValueChanged(UpdateHighscore);   
+        _levelData.Unsubscribe_OnValueChanged(UpdateLevel);
     }
 
     private void UpdateCombo(int combo)
@@ -55,6 +70,11 @@ public class ScoreDisplay : MonoBehaviour
     private void UpdateHighscore(int highscore)
     {
         StartCoroutine(PopUpAnimation(_highscore, highscore, _changeTextAt, _duration, _scaleMultiplier, _curve));
+    }
+    
+    private void UpdateLevel(int level)
+    {
+        StartCoroutine(PopUpAnimation(_level, level+1, _changeTextAt, _duration, _scaleMultiplier, _curve));
     }
     
     private IEnumerator PopUpAnimation(TextMeshProUGUI text, int newValue, float changeTextAt, float duration, float scaleMultiplier, AnimationCurve curve)

@@ -13,6 +13,7 @@ public class CardMatchingController : MonoBehaviour
 
     private CardSpawner _cardSpawner;
     private CardFlipper _flipper;
+    private FlipCardsAtBeginning _flipBeginning;
     private Camera _camera;
     private Card _selectedCard;
     private HashSet<int> _cardsLeft;
@@ -26,6 +27,8 @@ public class CardMatchingController : MonoBehaviour
     public void Unsubscribe_OnMismatch(Action action) => OnMismatch -= action;
     public void Subscribe_OnVictory(Action action) => OnVictory += action;
     public void Unsubscribe_OnVictory(Action action) => OnVictory -= action;
+
+    private bool _canUpdate;
     
     private void Awake()
     {
@@ -36,10 +39,26 @@ public class CardMatchingController : MonoBehaviour
         
         _cardSpawner = GetComponent<CardSpawner>();
         _flipper = GetComponent<CardFlipper>();
+        _flipBeginning = GetComponent<FlipCardsAtBeginning>();
         _camera = Camera.main;
     }
 
-    private void Start()
+    private void OnEnable()
+    {
+        _flipBeginning.Subscribe_OnCardsUnflipped(BlockUpdate);
+        _flipBeginning.Subscribe_OnAllCardsFlipper(UnblockUpdate);
+    }
+
+    private void OnDisable()
+    {
+        _flipBeginning.Unsubscribe_OnCardsUnflipped(BlockUpdate);
+        _flipBeginning.Unsubscribe_OnAllCardsFlipper(UnblockUpdate);
+    }
+
+    private void BlockUpdate() => _canUpdate = false;
+    private void UnblockUpdate() => _canUpdate = true;
+    
+    public void CountCards()
     {
         _cardsLeft = new HashSet<int>(_cardSpawner.Cards.Count / 2);
         foreach (Card card in _cardSpawner.Cards)
@@ -48,6 +67,9 @@ public class CardMatchingController : MonoBehaviour
 
     void Update()
     {
+        if (!_canUpdate)
+            return;
+        
         if (Input.GetMouseButtonDown(0))
             TrySelectCard();
     }
@@ -116,6 +138,9 @@ public class CardMatchingController : MonoBehaviour
         yield return new WaitWhile(() => currentCard.IsFlipping);
         yield return new WaitForSeconds(_unflipDelay);
         SoundManager.instance.Play_Win(1f, false);
+        yield return new WaitForSeconds(1.5f);
         OnVictory?.Invoke();
+        yield return null;
+        SaveLoadController.instance.Save();
     }
 }

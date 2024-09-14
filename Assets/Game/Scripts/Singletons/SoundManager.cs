@@ -25,7 +25,7 @@ public class SoundManager : MonoBehaviour
         else if (instance != this)
             Destroy(gameObject);
         
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(gameObject);
 
         _audioSources = GetComponents<AudioSource>();
     }

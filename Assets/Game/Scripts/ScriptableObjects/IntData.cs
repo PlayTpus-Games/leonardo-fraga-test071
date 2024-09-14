@@ -6,7 +6,7 @@ public class IntData : ScriptableObject
 {
     [SerializeField] private int _value;
     [SerializeField] private int _minValue;
-    [SerializeField] private int _maxValue;
+    [SerializeField] private int _maxValue = 9999;
 
     private Action<int> OnValueChanged;
     public void Subscribe_OnValueChanged(Action<int> action) => OnValueChanged += action;
@@ -16,9 +16,6 @@ public class IntData : ScriptableObject
 
     public void SetValue(int newValue, bool fireEvent = true)
     {
-        if (newValue == _value)
-            return;
-        
         _value = newValue;
         Clamp();
         
