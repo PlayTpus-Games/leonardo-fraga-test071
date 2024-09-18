@@ -1,63 +1,78 @@
 using System.Collections.Generic;
-using UnityEditor;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEditor;
 
-[RequireComponent(typeof(CardGrid))]
 public class CardSpawner : MonoBehaviour
 {
-    [SerializeField] private CardGrid _grid;
-    [SerializeField] private CardImageData _imagesData;
-    [SerializeField] private GameObject _cardPrefab;
-    [SerializeField] private List<Card> _cards;
+    [SerializeField, Required("This field is required")] private GameObject _cardPrefab;
+    [SerializeField, ReadOnly] private GameObject _cardHolder;
+    [SerializeField, ReadOnly] private List<Card> _cards;
     public List<Card> Cards => _cards;
     
-    public void Spawn()
+    private (Sprite sprite, int index)[] _spriteIndex;
+    
+    public void Spawn(int totalSize, Vector3 cardSize, Vector3[,] gridPositions, CardImageData imageData)
     {
-        DeleteAll();
-        CalculateSpriteIndexes();
+        if (!_cardPrefab)
+        {
+            Debug.LogWarning($"The ''Card Prefab'' field of CardSpawner.cs is required to spawn!");
+            return;
+        }
         
-        _cards = new List<Card>(_grid.TotalSize);
+        DeleteAll();
+        CalculateSpriteIndexes(totalSize, imageData);
+        
+        _cards = new List<Card>(totalSize);
         int i = 0;
-        foreach (Vector3 pos in _grid.Positions)
+        foreach (Vector3 pos in gridPositions)
         {
             Transform cardClone = ((GameObject)PrefabUtility.InstantiatePrefab(_cardPrefab)).transform;
-            cardClone.localScale = _grid.CardSize;
+            cardClone.localScale = cardSize;
             cardClone.position = pos;
             
             Card card = cardClone.GetComponent<Card>();
             card.SetCard(_spriteIndex[i++]);
             _cards.Add(card);
         }
+        
+        AddCardsToCardHolder();
     }
-
-    private (Sprite sprite, int index)[] _spriteIndex;
-    private void CalculateSpriteIndexes()
+    public void DeleteAll()
     {
-        int[] spriteIndexes = new int[_imagesData.Fruits.Length];
-        for (int i = 0; i < _imagesData.Fruits.Length; i++)
+        if (_cardHolder != null)
+            DestroyImmediate(_cardHolder);
+        
+        CardHolder[] cardHolders = FindObjectsByType<CardHolder>(FindObjectsSortMode.None);
+        foreach (CardHolder cardHolder in cardHolders)
+            DestroyImmediate(cardHolder.gameObject);
+
+        _cards?.Clear();
+    }
+    private void CalculateSpriteIndexes(int totalSize, CardImageData imageData)
+    {
+        int[] spriteIndexes = new int[imageData.Sprites.Length];
+        for (int i = 0; i < imageData.Sprites.Length; i++)
             spriteIndexes[i] = i;
 
         spriteIndexes.Shuffle();
         
-        _spriteIndex = new (Sprite, int)[_grid.TotalSize];
-        for (int i = 0; i < _grid.TotalSize; i+=2)
+        _spriteIndex = new (Sprite, int)[totalSize];
+        for (int i = 0; i < totalSize; i+=2)
         {
-            _spriteIndex[i] = (_imagesData.Fruits[spriteIndexes[i]], spriteIndexes[i]);
+            _spriteIndex[i] = (imageData.Sprites[spriteIndexes[i]], spriteIndexes[i]);
             if (i+1 < _spriteIndex.Length)
-                _spriteIndex[i+1] = (_imagesData.Fruits[spriteIndexes[i]], spriteIndexes[i]);
+                _spriteIndex[i+1] = (imageData.Sprites[spriteIndexes[i]], spriteIndexes[i]);
         }
 
         _spriteIndex.Shuffle();
     }
-    
-    public void DeleteAll()
+    private void AddCardsToCardHolder()
     {
-        while (_cards.Count > 0)
-        {
-            DestroyImmediate(_cards[0].gameObject);
-            _cards.RemoveAt(0);
-        }
-
-        _cards = new List<Card>(_grid.TotalSize);
+        _cardHolder = new GameObject("Card Holder", typeof(CardHolder));
+        foreach (Card card in _cards)
+            card.transform.SetParent(_cardHolder.transform);
+        
+        _cardHolder.GetComponent<CardHolder>().LoadCards(_cards);
     }
 }

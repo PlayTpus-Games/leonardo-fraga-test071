@@ -15,5 +15,4 @@ MonoBehaviour:
   _maxSize: {x: 3, y: 4}
   _minSize: {x: 0.1, y: 0.1}
   _thickness: 0.1
-  _preserveAspectRatio: 0
   _aspectRatio: 0.75

@@ -1,57 +1,99 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider)), ExecuteInEditMode]
-public class CardGrid : MonoBehaviour
+[RequireComponent(typeof(BoxCollider), typeof(CardSpawner)), ExecuteInEditMode]
+public class CardGridBuilder : MonoBehaviour
 {
     [SerializeField] private BoxCollider _col;
+    [SerializeField] private CardSpawner _spawner;
     [Space(15)]
     [Tooltip("At least of axis have to be a pair number.")]
     [SerializeField] private Vector2Int _gridSize;
+    private Vector2Int _prevGridSize;
     private int rows => _gridSize.y;
     private int columns => _gridSize.x;
-    public Vector2Int Size => _gridSize;
-    public int TotalSize => _gridSize.x * _gridSize.y;
+    private int TotalSize => _gridSize.x * _gridSize.y;
     
     [SerializeField] private bool _preserveAspectRatio;
-    [Tooltip("This was intended to be used with OdinInspector's InLineEditor attribute for a fluid workflow")]
-    [SerializeField/*, InLineEditor*/] private GridConfigData _gridData;
-    [Tooltip("This was intended to be used with OdinInspector's InLineEditor attribute for a fluid workflow")]
-    [SerializeField/*, InLineEditor*/] private CardSizeConfigData _cardData;
-    [SerializeField] private bool _showGizmos = true;
+    private bool _prevPreserveAspectRatio;
+    [SerializeField, InlineEditor, Required("This field is required.")] private GridConfigData _gridData;
+    [SerializeField, InlineEditor, Required("This field is required.")] private CardSizeConfigData _cardData;
+    [SerializeField, InlineEditor, Required("This field is required.")] private CardImageData _cardImageData;
+    [SerializeField] private bool _showGizmos;
     
     private Vector3[,] _gridPositions;
-    public Vector3[,] Positions => _gridPositions;
     private Bounds _bounds => _col.bounds;
     private Vector3 _center => _bounds.center + new Vector3(0f, _bounds.extents.y, 0f);
     private Vector3 _gridWorldSize => _bounds.size - new Vector3(_gridData.Padding.x, 0, _gridData.Padding.y) * 0.5f;
-    public Vector3 CardSize => _cardSize;
     private Vector3 _cardSize;
     private Vector3 _initialCardPos;
-
-#if UNITY_EDITOR
-    private void OnValidate()
+    
+    private void Reset()
     {
-        // At least one axis must be a pair. Otherwise the pair of cards won't match
-        _gridSize = new Vector2Int(Mathf.Clamp(_gridSize.x, 2, 10), Mathf.Clamp(_gridSize.y, 2, 10));
-        if (_gridSize.x % 2 != 0 && _gridSize.y % 2 != 0)
-        {
-            if (_gridSize.x >= 3)
-                _gridSize.x--;
-            else
-                _gridSize.x++;
-        }
+        _gridSize = new Vector2Int(2, 2);
+        _col = GetComponent<BoxCollider>();
+        _spawner = GetComponent<CardSpawner>();
+        _spawner.DeleteAll();
     }
-#endif
+
     private void Update()
     {
-        if (Application.isPlaying || _gridData is null || _cardData is null)
+        ClampGridSize();
+        
+        if (NothingChanged())
             return;
+        
+        if (_showGizmos && (!_gridData || !_cardData || !_cardImageData))
+        {
+            Debug.LogWarning($"Show Gizmos can only be activate when all of the required fields are filled.");
+            _showGizmos = false;
+            return;
+        }
         
         CalculateCardSize();
         CalculateInitialCardPosition();
-        CreatePositionGrid();
+        CreateGridPositions();
+        _spawner.Spawn(TotalSize, _cardSize, _gridPositions, _cardImageData);
+
+        _prevGridSize = _gridSize;
+        _prevPreserveAspectRatio = _preserveAspectRatio;
     }
 
+    private bool NothingChanged()
+    {
+        return _prevGridSize == _gridSize &&
+               _prevPreserveAspectRatio == _preserveAspectRatio &&
+               !_gridData.Updated &&
+               !_cardData.Updated &&
+               !_cardImageData.Updated;
+    }
+    
+    private void ClampGridSize()
+    {
+        if (_prevGridSize != _gridSize)
+        {
+            if (_gridSize.x * _gridSize.y > _cardImageData.Sprites.Length)
+            {
+                if (_prevGridSize.x != _gridSize.x)
+                    _gridSize.x = _cardImageData.Sprites.Length / _gridSize.y;
+                else
+                    _gridSize.y = _cardImageData.Sprites.Length / _gridSize.x;
+            }
+        
+            _gridSize.x = _gridSize.x < 2 ? 2 : _gridSize.x;
+            _gridSize.y = _gridSize.y < 2 ? 2 : _gridSize.y;
+        
+            // At least one axis must be a pair. Otherwise the pair of cards won't match
+            if (_gridSize.x % 2 != 0 && _gridSize.y % 2 != 0)
+            {
+                if (_gridSize.x >= 3)
+                    _gridSize.x--;
+                else
+                    _gridSize.x++;
+            }
+        }
+    }
+    
     private void CalculateCardSize()
     {
         Vector2 totalSpacing = new Vector2(_gridData.Spacing.x * (columns - 1), _gridData.Spacing.y * (rows - 1));
@@ -76,7 +118,7 @@ public class CardGrid : MonoBehaviour
         _initialCardPos.y += _cardData.Thickness * 0.5f;
     }
     
-    private void CreatePositionGrid()
+    private void CreateGridPositions()
     {
         _gridPositions = new Vector3[rows, columns];
         for (int row = 0; row < rows; row++)
@@ -91,10 +133,9 @@ public class CardGrid : MonoBehaviour
         }
     }
     
-#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (!_showGizmos)
+        if (!_showGizmos || !_gridData || !_cardData || !_cardImageData)
             return;
         
         Gizmos.color = Color.yellow;
@@ -139,5 +180,4 @@ public class CardGrid : MonoBehaviour
         Vector3 botRightPadded = botRight + new Vector3(-_gridData.Padding.x, 0f, _gridData.Padding.y) * 0.25f;
         Gizmos.DrawLine(botRight, botRightPadded);
     }
-#endif
 }
