@@ -38,17 +38,24 @@ public class CardGridBuilder : MonoBehaviour
 
     private void Update()
     {
-        ClampGridSize();
-        
-        if (NothingChanged())
-            return;
-        
-        if (_showGizmos && (!_gridData || !_cardData || !_cardImageData))
+        bool hasAllData = _gridData && _cardData && _cardImageData; 
+        if (_showGizmos && !hasAllData)
         {
             Debug.LogWarning($"Show Gizmos can only be activate when all of the required fields are filled.");
             _showGizmos = false;
             return;
         }
+
+        if (!hasAllData)
+        {
+            _gridSize = Vector2Int.one * 2;
+            return;
+        }
+
+        ClampGridSize();
+        
+        if (NothingChanged())
+            return;
         
         CalculateCardSize();
         CalculateInitialCardPosition();
