@@ -4,6 +4,12 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider), typeof(CardSpawner)), ExecuteInEditMode]
 public class CardGridBuilder : MonoBehaviour
 {
+    #pragma warning disable 
+    [SerializeField, ReadOnly, TextArea(2, 4)]
+    private string _note = "To prevent the cards from being randomly recreated after every play, disable this script.";
+    #pragma warning restore
+    
+    [Space(15)]
     [SerializeField] private BoxCollider _col;
     [SerializeField] private CardSpawner _spawner;
     [Space(15)]
