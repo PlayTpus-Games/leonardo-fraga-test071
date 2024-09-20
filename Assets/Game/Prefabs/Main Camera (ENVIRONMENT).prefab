@@ -177,7 +177,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
-  m_ShadowAngle: 0
+  m_ShadowAngle: 10.4
 --- !u!114 &6196898615373068911
 MonoBehaviour:
   m_ObjectHideFlags: 0

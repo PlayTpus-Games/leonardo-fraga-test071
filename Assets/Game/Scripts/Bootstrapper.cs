@@ -3,18 +3,19 @@ using UnityEngine.SceneManagement;
 
 public static class PerformBoostrap
 {
-    private const string SCENE_NAME = "Bootstrapper";
+    private const string BOOSTRAPPER_NAME = "Bootstrapper";
+    private const string CONTROLLERS_NAME = "Controllers";
     
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void Execute()
     {
         for (int sceneIndex = 0; sceneIndex < SceneManager.sceneCount; sceneIndex++)
         {
-            if (SceneManager.GetSceneAt(sceneIndex).name == SCENE_NAME)
+            if (SceneManager.GetSceneAt(sceneIndex).name == BOOSTRAPPER_NAME)
                 return;
         }
         
-        SceneManager.LoadScene(SCENE_NAME, LoadSceneMode.Additive);
+        SceneManager.LoadScene(BOOSTRAPPER_NAME, LoadSceneMode.Additive);
     }
 }
 

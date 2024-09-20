@@ -96,8 +96,10 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: d9cd3a13faa4efa40bac671ca848cded,
+    type: 2}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 7843bd0116757b545b08e64a278d6eae,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -189,7 +191,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera (ENVIRONMENT)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2059406842, guid: 89e1c65cffed1ab459e5e6f269fd3718, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 89e1c65cffed1ab459e5e6f269fd3718, type: 3}
 --- !u!1001 &593771606
 PrefabInstance:
