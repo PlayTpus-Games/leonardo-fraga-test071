@@ -1,19 +1,21 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class CardSpawner : MonoBehaviour
 {
     [SerializeField, Required("This field is required")] private GameObject _cardPrefab;
     [SerializeField, ReadOnly] private GameObject _cardHolder;
     [SerializeField, ReadOnly] private List<Card> _cards;
-    public List<Card> Cards => _cards;
     
     private (Sprite sprite, int index)[] _spriteIndex;
     
     public void Spawn(int totalSize, Vector3 cardSize, Vector3[,] gridPositions, CardImageData imageData)
     {
+#if UNITY_EDITOR
         if (!_cardPrefab)
         {
             Debug.LogWarning($"The ''Card Prefab'' field of CardSpawner.cs is required to spawn!");
@@ -37,9 +39,12 @@ public class CardSpawner : MonoBehaviour
         }
         
         AddCardsToCardHolder();
+#endif        
     }
+    
     public void DeleteAll()
     {
+#if UNITY_EDITOR
         if (_cardHolder != null)
             DestroyImmediate(_cardHolder);
         
@@ -48,6 +53,7 @@ public class CardSpawner : MonoBehaviour
             DestroyImmediate(cardHolder.gameObject);
 
         _cards?.Clear();
+#endif
     }
     private void CalculateSpriteIndexes(int totalSize, CardImageData imageData)
     {

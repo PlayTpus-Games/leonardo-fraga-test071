@@ -37,13 +37,7 @@ public class Card : MonoBehaviour
             _revealed = false;
     }
 
-    public void PlayMatchEffects()
-    {
-        _psMatch.transform.SetParent(null);
-        _psMatch.transform.localScale = Vector3.one;
-        _psMatch.Play();
-        Destroy(_psMatch.gameObject, 1f);
-    }
+    public void PlayVFX() => _psMatch.Play();
     
     private void Update()
     {

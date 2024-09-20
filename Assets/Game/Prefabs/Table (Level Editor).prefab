@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 6952013014737068983}
   - component: {fileID: 6952013014737068982}
   - component: {fileID: 6952013014737068981}
-  - component: {fileID: 8142192692454505721}
-  - component: {fileID: 488539039823401372}
+  - component: {fileID: 4175317467684412320}
+  - component: {fileID: 1377221953720428317}
   m_Layer: 0
   m_Name: Table (Level Editor)
   m_TagString: Untagged
@@ -99,27 +99,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8142192692454505721
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6952013014737068980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a18e0d625be82734095dc56343cda54d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _col: {fileID: 6952013014737068981}
-  _spawner: {fileID: 488539039823401372}
-  _gridSize: {x: 6, y: 3}
-  _preserveAspectRatio: 1
-  _gridData: {fileID: 11400000, guid: 17e4144633c2a2145a3ed662d4f4be52, type: 2}
-  _cardData: {fileID: 11400000, guid: 7f86711e39af69c49889d3dcdbbff8ef, type: 2}
-  _cardImageData: {fileID: 11400000, guid: 20cb37d472198694995007570924e8fb, type: 2}
-  _showGizmos: 0
---- !u!114 &488539039823401372
+--- !u!114 &4175317467684412320
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,17 +119,23 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+--- !u!114 &1377221953720428317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6952013014737068980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a18e0d625be82734095dc56343cda54d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _col: {fileID: 6952013014737068981}
+  _spawner: {fileID: 4175317467684412320}
+  _gridSize: {x: 2, y: 2}
+  _preserveAspectRatio: 0
+  _gridData: {fileID: 11400000, guid: 17e4144633c2a2145a3ed662d4f4be52, type: 2}
+  _cardData: {fileID: 11400000, guid: 7f86711e39af69c49889d3dcdbbff8ef, type: 2}
+  _cardImageData: {fileID: 11400000, guid: 20cb37d472198694995007570924e8fb, type: 2}
+  _showGizmos: 0
