@@ -9,8 +9,6 @@ public class CardFlipper : MonoBehaviour, IUnloadable
 
     [SerializeField] private CardFlipData _initialFlipData;
     [SerializeField] private CardFlipData _gameplayFlipData;
-
-    //private bool _reloading;
     
     private const float EULER_Z_LOOKING_DOWN = -180f;
 
@@ -26,9 +24,6 @@ public class CardFlipper : MonoBehaviour, IUnloadable
     }
     private IEnumerator FlipCardCoroutine(Card card, FlipType flipType)
     {
-        //if (!card)
-        //    Debug.Log("");
-        
         Transform cardTransform = card.transform;
         CardFlipData data = flipType is FlipType.InitialFlip ? _initialFlipData : _gameplayFlipData;
 
@@ -65,16 +60,5 @@ public class CardFlipper : MonoBehaviour, IUnloadable
         cardTransform.localScale = initialScale;
     }
 
-    public void Unload()
-    {
-        //_reloading = true;
-        StopAllCoroutines();
-        //StartCoroutine(ReloadingForAFrame());
-    }
-
-    // private IEnumerator ReloadingForAFrame()
-    // {
-    //     yield return null;
-    //     _reloading = false;
-    // }
+    public void Unload() => StopAllCoroutines();
 }
