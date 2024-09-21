@@ -44,5 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e08d9be1a283af54a825f145f78ec73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _onVictoryEvent: {fileID: 11400000, guid: d3d914a62e7e70b469b11542adf07419, type: 2}
   _levelData: {fileID: 11400000, guid: 641117aa54d000b4394cdab8ec8a6c46, type: 2}
   _highScoreData: {fileID: 11400000, guid: 6f246cf26637a58489c3e272b5984545, type: 2}

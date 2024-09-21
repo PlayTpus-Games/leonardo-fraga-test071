@@ -61,8 +61,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hideCardsAfterDelay: 1
   _intervalBetweenCards: 0.045
-  _cardHolder: {fileID: 0}
-  _cards: []
 --- !u!114 &1160452128974761620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,6 +73,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a74dac95a42aded4dadf4671d32a9b0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _onVictoryEvent: {fileID: 11400000, guid: d3d914a62e7e70b469b11542adf07419, type: 2}
   _cardLayerMask:
     serializedVersion: 2
     m_Bits: 64

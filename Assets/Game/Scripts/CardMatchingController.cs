@@ -5,15 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(CardFlipper), typeof(PreGameCardFlipper))]
 public class CardMatchingController : MonoBehaviour, IUnloadable
 {
+    [SerializeField] private GameEventData _onVictoryEvent;
     [SerializeField] private LayerMask _cardLayerMask;
     [SerializeField] private float _unflipDelay;
-
+    
     private PreGameCardFlipper _preGameCardFlipper;
     private CardFlipper _flipper;
     private Camera _camera;
     private Card _selectedCard;
     private HashSet<int> _cardsLeft;
     private bool _started;
+    
+    private const float DELAY_BEFORE_CALLING_ONVICTORY = 1.5f; // This is an arbitrary value based on the ''SFX - Win.mp3'' sound.
     
     private void Awake()
     {
@@ -98,6 +101,9 @@ public class CardMatchingController : MonoBehaviour, IUnloadable
         yield return new WaitWhile(() => currentCard.IsFlipping);
         yield return new WaitForSeconds(_unflipDelay);
         SoundManager.instance.Play_Win(1f, false);
+        
+        yield return new WaitForSeconds(DELAY_BEFORE_CALLING_ONVICTORY);
+        _onVictoryEvent.Raise(name);
     }
 
     public void Unload()
